@@ -22,11 +22,40 @@ public class TestHuffman {
 
   private ClassLoader classLoader = getClass().getClassLoader();
 
-  private VerifyTree verifyTree;
+  /**
+   * Verifica que el árbol de Huffman sea válido.
+   * @param tree árbol de Huffman
+   * @return true si el árbol es válido, false de lo contrario
+   */
+  public boolean verifyTree(HuffmanBinaryTree tree){
+    int key = tree.getNumberKey();
+    if (key != -1){
+      HuffmanBinaryTree left = tree.getLeft();
+      HuffmanBinaryTree right = tree.getRight();
 
-  @BeforeAll
-  public void createVerifyTree(){
-    verifyTree = new VerifyTree();
+      if (left != null && right != null){
+        boolean condition = key >= left.getNumberKey() && key >= right.getNumberKey();
+        return condition && verifyTree(left) && verifyTree(right);
+      }
+      else{
+        if (left == null){
+          boolean condition = key >= right.getNumberKey();
+          return condition && verifyTree(right);
+        }
+        else {
+          if (right == null){
+            boolean condition = key >= left.getNumberKey();
+            return condition && verifyTree(left);
+          }
+          else{
+            return true;
+          }
+        }
+      }
+    }
+    else{
+      return true;
+    }
   }
 
   private String loadFile(String fileName){
@@ -53,7 +82,7 @@ public class TestHuffman {
     String decoded = decoding.decode(encoded, tree);
 
     //Assert
-    assertTrue(verifyTree.verify(tree));
+    assertTrue(verifyTree(tree));
     assertEquals(text, decoded);
   }
 
@@ -70,7 +99,7 @@ public class TestHuffman {
     String decoded = decoding.decode(encoded, tree);
 
     //Assert
-    assertTrue(verifyTree.verify(tree));
+    assertTrue(verifyTree(tree));
     assertEquals(text, decoded);
   }
 
@@ -79,6 +108,7 @@ public class TestHuffman {
     //Setup
     HuffmanCoding coding = new HuffmanCoding();
     String text = loadFile("ejemplo3.in");
+    System.out.println(text);
     HuffmanDecoding decoding = new HuffmanDecoding();
 
     //Execute
@@ -87,7 +117,7 @@ public class TestHuffman {
     String decoded = decoding.decode(encoded, tree);
 
     //Assert
-    assertTrue(verifyTree.verify(tree));
+    assertTrue(verifyTree(tree));
     assertEquals(text, decoded);
   }
   
