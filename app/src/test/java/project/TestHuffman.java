@@ -10,9 +10,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashMap;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -59,13 +63,16 @@ public class TestHuffman {
   }
 
   private String loadFile(String fileName){
-    try{
-      Path filePath = Path.of(classLoader.getResource(fileName).getFile());
-      return Files.readString(filePath, StandardCharsets.UTF_8);
+    URL resourceUrl = classLoader.getResource(fileName);
+    if (resourceUrl != null) {
+      try {
+        Path filePath = Paths.get(resourceUrl.toURI());
+        return Files.readString(filePath, StandardCharsets.UTF_8);
+      } catch (IOException | URISyntaxException e) {
+        e.printStackTrace();
+      }
     }
-    catch(IOException e){
-      return null;
-    }
+    return null;
 
   }
 
@@ -78,12 +85,18 @@ public class TestHuffman {
 
     //Execute
     String encoded = coding.encode(text);
+    HashMap<String,String> mapa = coding.getSummary();
+    for (String letra : mapa.keySet()) {
+      Object frequencia = mapa.get(letra);
+      System.out.println("'" + letra + "' : " + frequencia);
+    }
     HuffmanBinaryTree tree = coding.getTree();
     String decoded = decoding.decode(encoded, tree);
 
     //Assert
     assertTrue(verifyTree(tree));
     assertEquals(text, decoded);
+
   }
 
   @Test
@@ -97,6 +110,7 @@ public class TestHuffman {
     String encoded = coding.encode(text);
     HuffmanBinaryTree tree = coding.getTree();
     String decoded = decoding.decode(encoded, tree);
+    System.out.println(decoded);
 
     //Assert
     assertTrue(verifyTree(tree));
