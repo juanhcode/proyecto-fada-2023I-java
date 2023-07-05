@@ -19,7 +19,7 @@ public class FrequencyTable {
                 }
             }
         }
-
+        //Borrar
         /*
         // Agregar el salto de línea a la tabla de frecuencias
         char saltoDeLinea = '\n';
