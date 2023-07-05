@@ -33,33 +33,22 @@ public class TestHuffman {
    */
   public boolean verifyTree(HuffmanBinaryTree tree){
     int key = tree.getNumberKey();
-    if (key != -1){
+    if (key != -1) {
       HuffmanBinaryTree left = tree.getLeft();
       HuffmanBinaryTree right = tree.getRight();
 
-      if (left != null && right != null){
+      if (left != null && right != null) {
         boolean condition = key >= left.getNumberKey() && key >= right.getNumberKey();
         return condition && verifyTree(left) && verifyTree(right);
-      }
-      else{
-        if (left == null){
-          boolean condition = key >= right.getNumberKey();
-          return condition && verifyTree(right);
-        }
-        else {
-          if (right == null){
-            boolean condition = key >= left.getNumberKey();
-            return condition && verifyTree(left);
-          }
-          else{
-            return true;
-          }
-        }
+      } else if (left == null && right != null) {
+        boolean condition = key >= right.getNumberKey();
+        return condition && verifyTree(right);
+      } else if (left != null && right == null) {
+        boolean condition = key >= left.getNumberKey();
+        return condition && verifyTree(left);
       }
     }
-    else{
-      return true;
-    }
+    return true;
   }
 
   private String loadFile(String fileName){
@@ -94,7 +83,7 @@ public class TestHuffman {
     String decoded = decoding.decode(encoded, tree);
 
     //Assert
-    assertTrue(verifyTree(tree));
+    assertTrue(verifyTree(tree.getPadre()));
     assertEquals(text, decoded);
 
   }
@@ -108,12 +97,17 @@ public class TestHuffman {
 
     //Execute
     String encoded = coding.encode(text);
+    HashMap<String,String> mapa = coding.getSummary();
+    for (String letra : mapa.keySet()) {
+      Object frequencia = mapa.get(letra);
+      System.out.println("'" + letra + "' : " + frequencia);
+    }
     HuffmanBinaryTree tree = coding.getTree();
     String decoded = decoding.decode(encoded, tree);
     System.out.println(decoded);
 
     //Assert
-    assertTrue(verifyTree(tree));
+    assertTrue(verifyTree(tree.getPadre()));
     assertEquals(text, decoded);
   }
 
@@ -127,11 +121,16 @@ public class TestHuffman {
 
     //Execute
     String encoded = coding.encode(text);
+    HashMap<String,String> mapa = coding.getSummary();
+    for (String letra : mapa.keySet()) {
+      Object frequencia = mapa.get(letra);
+      System.out.println("'" + letra + "' : " + frequencia);
+    }
     HuffmanBinaryTree tree = coding.getTree();
     String decoded = decoding.decode(encoded, tree);
 
     //Assert
-    assertTrue(verifyTree(tree));
+    assertTrue(verifyTree(tree.getPadre()));
     assertEquals(text, decoded);
   }
   
