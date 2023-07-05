@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.PriorityQueue;
 
 public class HuffmanBinaryTree {
-  private Object key;
+  private Object key; //("A",45)
   private Object letra;
   private HuffmanBinaryTree left;
   private HuffmanBinaryTree right;

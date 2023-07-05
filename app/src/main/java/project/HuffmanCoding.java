@@ -6,9 +6,7 @@
  */
 package project;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 public class HuffmanCoding {
 
@@ -26,10 +24,6 @@ public class HuffmanCoding {
   public String encode(String text) {
     this.cadena = text;
     HashMap<Character,Integer> mapaDeFrecuencia = FrequencyTable.generateTable(text);
-    for (char letra : mapaDeFrecuencia.keySet()) {
-      int frequencia = mapaDeFrecuencia.get(letra);
-      System.out.println("'" + letra + "' : " + frequencia);
-    }
     this.arbol = new HuffmanBinaryTree();
     this.arbol.construirArbol(mapaDeFrecuencia);
     //arbol.imprimirArbol();
